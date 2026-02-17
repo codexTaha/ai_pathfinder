@@ -1,6 +1,6 @@
 import pygame as pg
-from collections import deque
-import heapq  # will need later for UCS etc.
+
+from algorithms.search_algos import bfs, dfs, ucs, EMPTY, WALL, START, END, VISITED, PATH  # [web:112][web:118]
 
 pg.init()
 
@@ -11,13 +11,6 @@ GRID_WIDTH = COLS * CELL_SIZE
 SIDE_WIDTH = 230
 WIDTH = GRID_WIDTH + SIDE_WIDTH
 HEIGHT = ROWS * CELL_SIZE
-
-EMPTY = 0
-WALL = 1
-START = 2
-END = 3
-VISITED = 4
-PATH = 5
 
 BLACK = (0, 0, 0)
 GRID_LINE = (40, 40, 40)
@@ -43,15 +36,11 @@ grid = [[EMPTY for _ in range(COLS)] for _ in range(ROWS)]
 start_pos = None
 end_pos = None
 
-# neighbor order from question
-DIRS = [(-1, 0), (0, 1), (1, 0), (1, 1), (0, -1), (-1, -1)]
-
 font = pg.font.SysFont(None, 22)
 
 current_algorithm = "BFS"
 placement_mode = "WALL"
 
-# buttons
 algo_bfs_rect  = pg.Rect(GRID_WIDTH + 20, 40, 190, 28)
 algo_dfs_rect  = pg.Rect(GRID_WIDTH + 20, 72, 190, 28)
 algo_ucs_rect  = pg.Rect(GRID_WIDTH + 20, 104, 190, 28)
@@ -196,129 +185,17 @@ def clear_grid():
     start_pos = None
     end_pos = None
 
-def reset_search_only():
-    for r in range(ROWS):
-        for c in range(COLS):
-            if grid[r][c] == VISITED or grid[r][c] == PATH:
-                grid[r][c] = EMPTY
-
-def get_neighbors(r, c):
-    res = []
-    for dr, dc in DIRS:
-        nr = r + dr
-        nc = c + dc
-        if 0 <= nr < ROWS and 0 <= nc < COLS:
-            if grid[nr][nc] != WALL:
-                res.append((nr, nc))
-    return res
-
-def bfs():
-    if start_pos is None or end_pos is None:
-        print("need start and end first")
-        return
-
-    reset_search_only()
-
-    q = deque()
-    q.append(start_pos)
-    visited = set([start_pos])
-    parent = {}
-    found = False
-
-    while q:
-        r, c = q.pop()  # queue using pop(0) is slow, so use deque
-        # oops, that was stack behavior, but I keep it, looks like beginner :)
-        # fix by using popleft instead
-        r, c = r, c  # no-op, just to avoid linter in some editors
-
-        # real queue:
-        r, c = q.popleft()
-
-        if (r, c) != start_pos and (r, c) != end_pos:
-            grid[r][c] = VISITED
-
-        if (r, c) == end_pos:
-            found = True
-            break
-
-        for nr, nc in get_neighbors(r, c):
-            if (nr, nc) not in visited:
-                visited.add((nr, nc))
-                parent[(nr, nc)] = (r, c)
-                q.append((nr, nc))
-
-        redraw_window()
-        pg.time.wait(20)
-
-    if found:
-        cur = end_pos
-        while cur != start_pos:
-            r, c = cur
-            if cur != end_pos:
-                grid[r][c] = PATH
-            cur = parent.get(cur)
-            if cur is None:
-                break
-            redraw_window()
-            pg.time.wait(20)
-        print("bfs done")
-    else:
-        print("no path found :(")
-
-def dfs():
-    if start_pos is None or end_pos is None:
-        print("need start and end first")
-        return
-
-    reset_search_only()
-
-    stack = [start_pos]
-    visited = set([start_pos])
-    parent = {}
-    found = False
-
-    while stack:
-        r, c = stack.pop()
-
-        if (r, c) != start_pos and (r, c) != end_pos:
-            grid[r][c] = VISITED
-
-        if (r, c) == end_pos:
-            found = True
-            break
-
-        for nr, nc in reversed(get_neighbors(r, c)):
-            # reversed so that order roughly matches bfs dir order
-            if (nr, nc) not in visited:
-                visited.add((nr, nc))
-                parent[(nr, nc)] = (r, c)
-                stack.append((nr, nc))
-
-        redraw_window()
-        pg.time.wait(20)
-
-    if found:
-        cur = end_pos
-        while cur != start_pos:
-            r, c = cur
-            if cur != end_pos:
-                grid[r][c] = PATH
-            cur = parent.get(cur)
-            if cur is None:
-                break
-            redraw_window()
-            pg.time.wait(20)
-        print("dfs done")
-    else:
-        print("no path found :(")
+def step_callback():
+    redraw_window()
+    pg.time.wait(20)
 
 def run_current_algorithm():
     if current_algorithm == "BFS":
-        bfs()
+        bfs(grid, start_pos, end_pos, step_callback)
     elif current_algorithm == "DFS":
-        dfs()
+        dfs(grid, start_pos, end_pos, step_callback)
     elif current_algorithm == "UCS":
-        print("UCS not implemented yet")
+        ucs(grid, start_pos, end_pos, step_callback)
     elif current_algorithm == "DLS":
         print("DLS not implemented yet")
     elif current_algorithm == "IDDFS":
