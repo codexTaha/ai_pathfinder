@@ -1,6 +1,10 @@
 import pygame as pg
 
-from algorithms.search_algos import bfs, dfs, ucs, EMPTY, WALL, START, END, VISITED, PATH  # [web:112][web:118]
+from algorithms.search_algos import (
+    bfs, dfs, ucs,
+    dls, iddfs, bidirectional_bfs,
+    EMPTY, WALL, START, END, VISITED, PATH
+)
 
 pg.init()
 
@@ -197,11 +201,12 @@ def run_current_algorithm():
     elif current_algorithm == "UCS":
         ucs(grid, start_pos, end_pos, step_callback)
     elif current_algorithm == "DLS":
-        print("DLS not implemented yet")
+        # choose a reasonable limit; grid max depth is ROWS*COLS
+        dls(grid, start_pos, end_pos, limit=40, step_callback=step_callback)
     elif current_algorithm == "IDDFS":
-        print("IDDFS not implemented yet")
+        iddfs(grid, start_pos, end_pos, max_limit=40, step_callback=step_callback)
     elif current_algorithm == "BIDIR":
-        print("Bidirectional not implemented yet")
+        bidirectional_bfs(grid, start_pos, end_pos, step_callback)
 
 def redraw_window():
     screen.fill(BLACK)
