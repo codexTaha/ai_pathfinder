@@ -1,26 +1,26 @@
 # AI Pathfinder – Uninformed Search Visualizer
 
-This project is a simple grid-based **AI Pathfinder** implemented in Python using Pygame. It visualizes how different **uninformed search algorithms** explore a grid from a Start node to a Target node while avoiding walls. [web:15][web:24]
+This project is a simple grid-based **AI Pathfinder** implemented in Python using Pygame. It visualizes how different **uninformed search algorithms** explore a grid from a Start node to a Target node while avoiding walls. 
 
 Implemented algorithms:
 
-- Breadth-First Search (BFS) [web:10][web:97]
-- Depth-First Search (DFS) [web:10][web:97]
-- Uniform-Cost Search (UCS) [web:10][web:102]
-- Depth-Limited Search (DLS) [web:11][web:128]
-- Iterative Deepening DFS (IDDFS) [web:106][web:130]
-- Bidirectional Search (Bidirectional BFS) [web:10][web:97]
+- Breadth-First Search (BFS) 
+- Depth-First Search (DFS) 
+- Uniform-Cost Search (UCS) 
+- Depth-Limited Search (DLS) 
+- Iterative Deepening DFS (IDDFS) 
+- Bidirectional Search (Bidirectional BFS) 
 
-The GUI shows frontier / explored nodes and the final path step-by-step so you can see how each algorithm behaves. [web:15][web:24]
+The GUI shows frontier / explored nodes and the final path step-by-step so you can see how each algorithm behaves. 
 
 ---
 
 ## Requirements
 
 - Python 3.10+ (tested with 3.14)
-- Pygame 2.x [web:69]
+- Pygame 2
 
-On Fedora / Linux you may need SDL2 development libraries for Pygame to compile, such as `SDL2-devel`, `SDL2_image-devel`, `SDL2_mixer-devel`, `SDL2_ttf-devel`, and `freetype-devel`. [web:60][web:64]
+On Fedora / Linux you may need SDL2 development libraries for Pygame to compile, such as `SDL2-devel`, `SDL2_image-devel`, `SDL2_mixer-devel`, `SDL2_ttf-devel`, and `freetype-devel`. 
 
 ---
 
